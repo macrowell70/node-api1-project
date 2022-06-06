@@ -52,4 +52,20 @@ server.delete('/api/users/:id', (req, res) => {
     .catch(result => res.status(500).json({ message: "The user could not be removed" }))
 });
 
+server.put('/api/users/:id', (req, res) => {
+    Users.update(req.params.id, req.body)
+    .then(result => {
+        if (result == null) {
+            res.status(404).json({ message: "The user with the specified ID does not exist" });
+            return;
+        }
+        if (!req.body.name || !req.body.bio) {
+            res.status(400).json({ message: "Please provide name and bio for the user" });
+            return;
+        }
+        res.json(result)
+    })
+    .catch(result => res.status(500).json({ message: "The user information could not be modified" }))
+});
+
 module.exports = server; // EXPORT YOUR SERVER instead of {}

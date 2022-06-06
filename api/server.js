@@ -21,11 +21,23 @@ server.post('/api/users', (req, res) => {
 server.get('/api/users', (req, res) => {
     Users.find().then(result => {
         if (result == null) {
-            res.status(500).json({ message: "the user information could not be retrieved" });
+            res.status(500).json({ message: "The users information could not be retrieved" });
             return;
         }
         res.json(result)
     });
-})
+});
+
+server.get('/api/users/:id', (req, res) => {
+    Users.findById(req.params.id)
+    .then(result => {
+        if (result == null) {
+            res.status(404).json({ message: "The user with the specified ID does not exist" })
+            return;
+        }
+        res.json(result)
+    })
+    .catch(result => res.status(500).json({ message: "The user information could not be retrieved" }));
+});
 
 module.exports = server; // EXPORT YOUR SERVER instead of {}
